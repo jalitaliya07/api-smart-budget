@@ -20,7 +20,14 @@ const register = async (req, res) => {
       data: { name, email, password: hashedPassword, status: 'APPROVED' }
     });
 
-    res.status(201).json({ message: 'User registered successfully', userId: user.id });
+    // Generate token for auto-login
+    const token = jwt.sign({ userId: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.status(201).json({ 
+      message: 'User registered successfully', 
+      token, 
+      user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
