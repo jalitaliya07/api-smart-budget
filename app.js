@@ -25,6 +25,7 @@ app.use('/api/budgets', budgetRoutes);
 app.use('/api/banks', bankRoutes);
 app.use('/api/delegate', delegateRoutes);
 app.use('/api/users', require('./routes/user.routes'));
+app.use('/api/voice-expense', require('./routes/voiceExpense.routes'));
 
 
 app.use((err, req, res, next) => {

@@ -74,3 +74,15 @@ model DelegateAccess {
   usedAt      DateTime?
   createdAt   DateTime @default(now())
 }
+
+model VoiceExpense {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  voiceText   String
+  title       String
+  amount      Float
+  category    String
+  type        String   // "expense" or "income"
+  source      String   @default("voice")
+  createdAt   DateTime @default(now())
+}
