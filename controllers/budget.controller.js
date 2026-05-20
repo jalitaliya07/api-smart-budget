@@ -45,4 +45,38 @@ const createBudget = async (req, res) => {
   }
 };
 
-module.exports = { getBudgets, createBudget };
+const updateBudget = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { limitAmount, bankName, categoryId } = req.body;
+    
+    const budget = await prisma.budget.update({
+      where: { id: parseInt(id) },
+      data: {
+        categoryId: parseInt(categoryId),
+        limitAmount: parseFloat(limitAmount),
+        bankName: bankName || null
+      },
+      include: { category: true }
+    });
+    res.json(budget);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const deleteBudget = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.budget.delete({
+      where: { id: parseInt(id) }
+    });
+    res.json({ message: 'Budget deleted successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { getBudgets, createBudget, updateBudget, deleteBudget };
