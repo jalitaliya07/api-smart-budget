@@ -1,0 +1,76 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id              Int               @id @default(autoincrement())
+  name            String
+  email           String            @unique
+  password        String
+  role            String            @default("USER") // USER, ADMIN
+  status          String            @default("APPROVED") // APPROVED, PENDING, REJECTED, SUSPENDED
+  createdAt       DateTime          @default(now())
+  expenses        Expense[]
+  budgets         Budget[]
+  delegateKeys    DelegateAccess[]  @relation("OwnerKeys")
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  color    String
+  expenses Expense[]
+  budgets  Budget[]
+}
+
+model Expense {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  categoryId    Int
+  title         String
+  amount        Float
+  notes         String?
+  paymentMethod String
+  expenseDate   DateTime
+  createdAt     DateTime @default(now())
+  user          User     @relation(fields: [userId], references: [id])
+  category      Category @relation(fields: [categoryId], references: [id])
+}
+
+model Budget {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  categoryId  Int
+  limitAmount Float
+  month       Int
+  year        Int
+  bankName    String?
+  user        User     @relation(fields: [userId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id])
+}
+
+model Bank {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  color     String
+  createdAt DateTime @default(now())
+}
+
+model DelegateAccess {
+  id          Int      @id @default(autoincrement())
+  passkey     String   @unique
+  ownerUserId Int
+  ownerUser   User     @relation("OwnerKeys", fields: [ownerUserId], references: [id])
+  guestName   String?
+  guestEmail  String?
+  status      String   @default("UNUSED") // UNUSED, PENDING, APPROVED, REJECTED
+  isUsed      Boolean  @default(false)
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime @default(now())
+}
