@@ -5,6 +5,7 @@ const prisma = require('../config/db');
 const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const finalName = name || (email && email.split('@')[0]) || 'User';
 
     // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
@@ -17,7 +18,7 @@ const register = async (req, res) => {
 
     // Create user
     const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword, status: 'APPROVED' }
+      data: { name: finalName, email, password: hashedPassword, status: 'APPROVED' }
     });
 
     // Generate token for auto-login
