@@ -14,6 +14,23 @@ const getAllCategories = async (req, res) => {
       const cash = await prisma.category.create({ data: { name: 'Cash', color: '#10B981' } });
       categories.push(cash);
     }
+
+    const hasFood = categories.some(c => c.name.toLowerCase() === 'food');
+    const hasRent = categories.some(c => c.name.toLowerCase() === 'rent');
+    const hasUtilities = categories.some(c => c.name.toLowerCase() === 'utilities');
+
+    if (!hasFood) {
+      const food = await prisma.category.create({ data: { name: 'Food', color: '#10B981' } });
+      categories.push(food);
+    }
+    if (!hasRent) {
+      const rent = await prisma.category.create({ data: { name: 'Rent', color: '#6366F1' } });
+      categories.push(rent);
+    }
+    if (!hasUtilities) {
+      const utilities = await prisma.category.create({ data: { name: 'Utilities', color: '#06B6D4' } });
+      categories.push(utilities);
+    }
     res.json(categories);
   } catch (error) {
     console.error(error);

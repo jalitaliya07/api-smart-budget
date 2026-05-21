@@ -29,7 +29,8 @@ const createExpense = async (req, res) => {
         notes,
         paymentMethod,
         expenseDate: new Date(expenseDate)
-      }
+      },
+      include: { category: true }
     });
     res.status(201).json(expense);
   } catch (error) {

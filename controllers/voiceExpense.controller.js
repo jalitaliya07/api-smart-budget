@@ -180,7 +180,8 @@ const saveVoiceTransaction = async (req, res) => {
           limitAmount: parseFloat(amount),
           month: transactionDate.getMonth() + 1,
           year: transactionDate.getFullYear()
-        }
+        },
+        include: { category: true }
       });
     } else {
       // Save as Expense
@@ -193,7 +194,8 @@ const saveVoiceTransaction = async (req, res) => {
           notes: `Added via voice: "${voiceText}"`,
           paymentMethod: 'Cash',
           expenseDate: transactionDate
-        }
+        },
+        include: { category: true }
       });
     }
 
